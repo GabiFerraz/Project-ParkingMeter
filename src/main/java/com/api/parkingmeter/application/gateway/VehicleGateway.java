@@ -1,3 +1,8 @@
 package com.api.parkingmeter.application.gateway;
 
-public class VehicleGateway {}
+import com.api.parkingmeter.application.domain.Vehicle;
+
+public interface VehicleGateway {
+
+  Vehicle save(final Vehicle vehicle);
+}
