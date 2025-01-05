@@ -1,12 +1,6 @@
 package com.api.parkingmeter.infrastructure.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -34,17 +28,16 @@ public class VehicleEntity {
   @Column(name = "owner_name")
   private String ownerName;
 
-  @OneToMany(mappedBy = "vehicle")
+  @OneToMany(
+      mappedBy = "vehicle",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   @Builder.Default
   private List<ParkingSessionEntity> parkingSessions = new ArrayList<>();
 
   public void addParkingSession(final ParkingSessionEntity parkingSession) {
     this.parkingSessions.add(parkingSession);
     parkingSession.setVehicle(this);
-  }
-
-  public void removeParkingSession(final ParkingSessionEntity parkingSession) {
-    this.parkingSessions.remove(parkingSession);
-    parkingSession.setVehicle(null);
   }
 }

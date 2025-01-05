@@ -4,5 +4,5 @@ import com.api.parkingmeter.application.domain.ParkingSession;
 
 public interface ParkingSessionGateway {
 
-  ParkingSession save(final Integer vehicleId, final ParkingSession parkingSession);
+  ParkingSession save(final String licensePlate, final ParkingSession parkingSession);
 }

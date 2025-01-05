@@ -19,34 +19,42 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
   private final VehicleRepository vehicleRepository;
 
   @Override
-  public ParkingSession save(final Integer vehicleId, final ParkingSession parkingSession) {
+  public ParkingSession save(final String licensePlate, final ParkingSession parkingSession) {
     final var vehicleEntity =
         vehicleRepository
-            .findById(vehicleId)
-            .orElseThrow(() -> new VehicleNotFoundException(vehicleId));
+            .findByLicensePlate(licensePlate)
+            .orElseThrow(() -> new VehicleNotFoundException(licensePlate));
 
-    final var entity =
+    final var parkingSessionEntity =
         ParkingSessionEntity.builder()
             .vehicle(vehicleEntity)
             .startTime(parkingSession.getStartTime())
             .endTime(parkingSession.getEndTime())
+            .extendable(parkingSession.isExtendable())
+            .paymentMethod(parkingSession.getPaymentMethod())
             .totalCost(parkingSession.getTotalCost())
+            .authenticationCode(parkingSession.getAuthenticationCode())
+            .status(parkingSession.getStatus())
             .build();
 
-    vehicleEntity.addParkingSession(entity);
+    vehicleEntity.addParkingSession(parkingSessionEntity);
 
-    final var savedEntity = parkingSessionRepository.save(entity);
+    final var savedParkingSessionEntity = parkingSessionRepository.save(parkingSessionEntity);
 
     return ParkingSession.builder()
-        .id(savedEntity.getId())
-        .vehicle(toDomain(savedEntity.getVehicle()))
-        .startTime(savedEntity.getStartTime())
-        .endTime(savedEntity.getEndTime())
-        .totalCost(savedEntity.getTotalCost())
+        .id(savedParkingSessionEntity.getId())
+        .vehicle(toVehicleDomain(savedParkingSessionEntity.getVehicle()))
+        .startTime(savedParkingSessionEntity.getStartTime())
+        .endTime(savedParkingSessionEntity.getEndTime())
+        .extendable(savedParkingSessionEntity.isExtendable())
+        .paymentMethod(savedParkingSessionEntity.getPaymentMethod())
+        .totalCost(savedParkingSessionEntity.getTotalCost())
+        .authenticationCode(savedParkingSessionEntity.getAuthenticationCode())
+        .status(savedParkingSessionEntity.getStatus())
         .build();
   }
 
-  private Vehicle toDomain(final VehicleEntity vehicleEntity) {
+  private Vehicle toVehicleDomain(final VehicleEntity vehicleEntity) {
     return new Vehicle(
         vehicleEntity.getId(), vehicleEntity.getLicensePlate(), vehicleEntity.getOwnerName());
   }
