@@ -19,10 +19,11 @@ public class ParkingSessionStatusUpdater {
 
   private final ParkingSessionGateway parkingSessionGateway;
 
-  @Scheduled(fixedRate = 60000)
-  @Transactional // Executa a cada 60 segundos
+  @Scheduled(fixedRate = 60000) // Executa a cada 60 segundos
+  @Transactional
   public void updateExpiredSessions() {
     log.info("Starting updating parking sessions...");
+
     int page = 0;
     final int size = 100;
 
