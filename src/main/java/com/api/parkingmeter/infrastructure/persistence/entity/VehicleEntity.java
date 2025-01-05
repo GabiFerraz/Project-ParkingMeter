@@ -1,7 +1,6 @@
 package com.api.parkingmeter.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,11 +29,10 @@ public class VehicleEntity {
 
   @OneToMany(
       mappedBy = "vehicle",
-      fetch = FetchType.LAZY,
+      fetch = FetchType.EAGER,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
-  @Builder.Default
-  private List<ParkingSessionEntity> parkingSessions = new ArrayList<>();
+  private List<ParkingSessionEntity> parkingSessions;
 
   public void addParkingSession(final ParkingSessionEntity parkingSession) {
     this.parkingSessions.add(parkingSession);

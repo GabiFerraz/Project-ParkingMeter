@@ -1,7 +1,7 @@
 package com.api.parkingmeter.infrastructure.gateway;
 
-import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.domain.Vehicle;
+import com.api.parkingmeter.application.dto.ParkingSessionDto;
 import com.api.parkingmeter.application.gateway.VehicleGateway;
 import com.api.parkingmeter.infrastructure.persistence.entity.ParkingSessionEntity;
 import com.api.parkingmeter.infrastructure.persistence.entity.VehicleEntity;
@@ -54,15 +54,15 @@ public class VehicleGatewayImpl implements VehicleGateway {
         .id(entity.getId())
         .licensePlate(entity.getLicensePlate())
         .ownerName(entity.getOwnerName())
-        .parkingSessions(this.toParkingSessionsDomain(entity.getParkingSessions()))
+        .parkingSessions(this.toParkingSessionsDto(entity.getParkingSessions()))
         .build();
   }
 
-  private List<ParkingSession> toParkingSessionsDomain(final List<ParkingSessionEntity> entities) {
+  private List<ParkingSessionDto> toParkingSessionsDto(final List<ParkingSessionEntity> entities) {
     return entities.stream()
         .map(
             entity ->
-                ParkingSession.builder()
+                ParkingSessionDto.builder()
                     .id(entity.getId())
                     .startTime(entity.getStartTime())
                     .endTime(entity.getEndTime())

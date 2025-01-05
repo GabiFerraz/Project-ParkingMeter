@@ -31,7 +31,7 @@ public class ParkingSessionEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   @JoinColumn(name = "vehicle_id", nullable = false)

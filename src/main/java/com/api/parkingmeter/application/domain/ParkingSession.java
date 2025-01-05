@@ -1,5 +1,6 @@
 package com.api.parkingmeter.application.domain;
 
+import com.api.parkingmeter.application.dto.VehicleDto;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,10 +17,10 @@ import lombok.Setter;
 @Builder
 public class ParkingSession {
 
-  private Long id;
+  private Integer id;
 
   @NotNull(message = "Vehicle is required")
-  private Vehicle vehicle;
+  private VehicleDto vehicle;
 
   @NotNull(message = "Start time is required")
   private LocalDateTime startTime;
@@ -39,7 +40,7 @@ public class ParkingSession {
   private ParkingSessionStatus status;
 
   public static ParkingSession create(
-      final Vehicle vehicle,
+      final VehicleDto vehicle,
       final LocalDateTime startTime,
       final LocalDateTime endTime,
       final boolean extendable,

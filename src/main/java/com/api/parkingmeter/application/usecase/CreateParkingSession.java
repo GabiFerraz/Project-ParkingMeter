@@ -3,6 +3,8 @@ package com.api.parkingmeter.application.usecase;
 import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.domain.ParkingSessionStatus;
 import com.api.parkingmeter.application.domain.PaymentMethod;
+import com.api.parkingmeter.application.domain.Vehicle;
+import com.api.parkingmeter.application.dto.VehicleDto;
 import com.api.parkingmeter.application.gateway.ParkingSessionGateway;
 import com.api.parkingmeter.application.gateway.VehicleGateway;
 import com.api.parkingmeter.application.usecase.exception.VehicleNotFoundException;
@@ -33,7 +35,7 @@ public class CreateParkingSession {
 
     final var buildDomain =
         ParkingSession.create(
-            vehicle,
+            this.toVehicleDto(vehicle),
             startTime,
             endTime,
             this.isExtendable(startTime, endTime),
@@ -43,6 +45,14 @@ public class CreateParkingSession {
             ParkingSessionStatus.ACTIVE);
 
     return parkingSessionGateway.save(licensePlate, buildDomain);
+  }
+
+  private VehicleDto toVehicleDto(final Vehicle vehicle) {
+    return VehicleDto.builder()
+        .id(vehicle.getId())
+        .licensePlate(vehicle.getLicensePlate())
+        .ownerName(vehicle.getOwnerName())
+        .build();
   }
 
   private boolean isExtendable(final LocalDateTime startTime, final LocalDateTime endTime) {
