@@ -16,7 +16,7 @@ import lombok.Setter;
 @Builder
 public class Vehicle {
 
-  private Long id;
+  private Integer id;
 
   @NotBlank(message = "License plate is required")
   @Size(min = 7, max = 7, message = "License plate must be 7 characters")
