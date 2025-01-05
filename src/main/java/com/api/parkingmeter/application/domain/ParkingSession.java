@@ -2,9 +2,7 @@ package com.api.parkingmeter.application.domain;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,38 +42,21 @@ public class ParkingSession {
       final Vehicle vehicle,
       final LocalDateTime startTime,
       final LocalDateTime endTime,
-      final PaymentMethod paymentMethod) {
+      final boolean extendable,
+      final PaymentMethod paymentMethod,
+      final BigDecimal totalCost,
+      final String authenticationCode,
+      final ParkingSessionStatus status) {
 
-    final var parkingSession =
-        ParkingSession.builder()
-            .vehicle(vehicle)
-            .startTime(startTime)
-            .endTime(endTime)
-            .paymentMethod(paymentMethod)
-            .authenticationCode(UUID.randomUUID().toString())
-            .status(ParkingSessionStatus.ACTIVE)
-            .build();
-
-    parkingSession.setExtendable(parkingSession.isExtendable(startTime, endTime));
-    parkingSession.setTotalCost(parkingSession.calculateTotalCost(startTime, endTime));
-
-    return parkingSession;
-  }
-
-  private boolean isExtendable(final LocalDateTime startTime, final LocalDateTime endTime) {
-    final var durationInMinutes = Duration.between(startTime, endTime).toMinutes();
-
-    return durationInMinutes <= 60;
-  }
-
-  private BigDecimal calculateTotalCost(
-      final LocalDateTime startTime, final LocalDateTime endTime) {
-    final var durationInMinutes = Math.min(Duration.between(startTime, endTime).toMinutes(), 120);
-
-    if (durationInMinutes <= 60) {
-      return BigDecimal.valueOf(10.00);
-    }
-
-    return BigDecimal.valueOf(15.00);
+    return ParkingSession.builder()
+        .vehicle(vehicle)
+        .startTime(startTime)
+        .endTime(endTime)
+        .extendable(extendable)
+        .paymentMethod(paymentMethod)
+        .totalCost(totalCost)
+        .authenticationCode(authenticationCode)
+        .status(status)
+        .build();
   }
 }
