@@ -55,7 +55,10 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
   }
 
   private Vehicle toVehicleDomain(final VehicleEntity vehicleEntity) {
-    return new Vehicle(
-        vehicleEntity.getId(), vehicleEntity.getLicensePlate(), vehicleEntity.getOwnerName());
+    return Vehicle.builder()
+        .id(vehicleEntity.getId())
+        .licensePlate(vehicleEntity.getLicensePlate())
+        .ownerName(vehicleEntity.getOwnerName())
+        .build();
   }
 }

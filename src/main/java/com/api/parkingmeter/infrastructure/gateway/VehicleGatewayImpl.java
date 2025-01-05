@@ -1,10 +1,14 @@
 package com.api.parkingmeter.infrastructure.gateway;
 
+import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.domain.Vehicle;
 import com.api.parkingmeter.application.gateway.VehicleGateway;
+import com.api.parkingmeter.infrastructure.persistence.entity.ParkingSessionEntity;
 import com.api.parkingmeter.infrastructure.persistence.entity.VehicleEntity;
 import com.api.parkingmeter.infrastructure.persistence.repository.VehicleRepository;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,10 +37,41 @@ public class VehicleGatewayImpl implements VehicleGateway {
   public Optional<Vehicle> findByLicensePlate(final String licensePlate) {
     final var entity = vehicleRepository.findByLicensePlate(licensePlate);
 
-    return entity.map(this::toResponse);
+    return entity.map(this::toResponseWithParkingSessions);
   }
 
   private Vehicle toResponse(final VehicleEntity entity) {
-    return new Vehicle(entity.getId(), entity.getLicensePlate(), entity.getOwnerName());
+    return Vehicle.builder()
+        .id(entity.getId())
+        .licensePlate(entity.getLicensePlate())
+        .ownerName(entity.getOwnerName())
+        .parkingSessions(Collections.emptyList())
+        .build();
+  }
+
+  private Vehicle toResponseWithParkingSessions(final VehicleEntity entity) {
+    return Vehicle.builder()
+        .id(entity.getId())
+        .licensePlate(entity.getLicensePlate())
+        .ownerName(entity.getOwnerName())
+        .parkingSessions(this.toParkingSessionsDomain(entity.getParkingSessions()))
+        .build();
+  }
+
+  private List<ParkingSession> toParkingSessionsDomain(final List<ParkingSessionEntity> entities) {
+    return entities.stream()
+        .map(
+            entity ->
+                ParkingSession.builder()
+                    .id(entity.getId())
+                    .startTime(entity.getStartTime())
+                    .endTime(entity.getEndTime())
+                    .extendable(entity.isExtendable())
+                    .paymentMethod(entity.getPaymentMethod())
+                    .totalCost(entity.getTotalCost())
+                    .authenticationCode(entity.getAuthenticationCode())
+                    .status(entity.getStatus())
+                    .build())
+        .toList();
   }
 }

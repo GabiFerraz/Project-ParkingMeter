@@ -1,8 +1,11 @@
 package com.api.parkingmeter.application.domain;
 
+import static java.util.Collections.emptyList;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +30,26 @@ public class Vehicle {
 
   private String ownerName;
 
+  private List<ParkingSession> parkingSessions;
+
   public static Vehicle create(final String licensePlate, final String ownerName) {
-    return Vehicle.builder().licensePlate(licensePlate).ownerName(ownerName).build();
+    return Vehicle.builder()
+        .licensePlate(licensePlate)
+        .ownerName(ownerName)
+        .parkingSessions(emptyList())
+        .build();
+  }
+
+  public static Vehicle search(
+      final Integer id,
+      final String licensePlate,
+      final String ownerName,
+      final List<ParkingSession> parkingSessions) {
+    return Vehicle.builder()
+        .id(id)
+        .licensePlate(licensePlate)
+        .ownerName(ownerName)
+        .parkingSessions(parkingSessions)
+        .build();
   }
 }
