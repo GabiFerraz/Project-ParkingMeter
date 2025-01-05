@@ -10,11 +10,13 @@ informações para fins de fiscalização.
 
 ## Funcionalidades
 A API permite:
+- **Criar** um veículo.
 - **Iniciar** um estacionamento.
-- **Encerrar** um estacionamento.
-- **Buscar** uma sessão de estacionamento.
-- **Buscar** o histórico de estacionamento de um veículo pela placa.
-- **Definir** a taxa de estacionamento.
+- **Encerrar** automaticamente um estacionamento alterando o status dele para finalizado.
+- **Buscar** um veículo pela placa e obter as informações dele junto com as sessões de estacionamento.
+- **Buscar** uma sessão de estacionamento pelo id e obter as informações do veículo.
+- **Atualizar** as informações de um veículo.
+- **Atualizar** um estacionamento ajustando o horário do término.
 
 ## Tecnologias Utilizadas
 - **Java 17**
@@ -28,11 +30,15 @@ A API permite:
 ## Estrutura do Projeto
 O projeto está organizado nas seguintes camadas:
 - `domain`: Define as entidades principais do domínio.
-- `gateway`: Interfaces e implementações para interação com o banco de dados.
+- `dto`: Representa as entradas e saidas de dados para a API.
+- `gateway`: Interfaces para interação com o banco de dados.
 - `usecase`: Contém os casos de uso com a lógica de negócios.
+- `usecase.exception`: Exceções customizadas utilizadas nos casos de uso.
+- `infrastructure.configuration`: Configurações do Controller Exception Handler.
+- `infrastructure.controller`: Controladores da API.
+- `infrastructure.gateway`: Implementações das interfaces do gateway.
 - `infrastructure.persistence.entity`: Representa as entidades de persistência do banco de dados.
 - `infrastructure.persistence.repository`: Interfaces dos repositórios Spring Data JPA.
-- `usecase.exception`: Exceções customizadas utilizadas nos casos de uso.
 
 ## Pré-requisitos
 - Java 17
@@ -61,26 +67,38 @@ Para visualização dos dados da api no banco de dados, acessar localmente o ban
 - **Banco H2**: http://localhost:8080/h2-console
 - **Driver Class**: org.h2.Driver
 - **JDBC URL**: jdbc:h2:mem:ParkingMeter
-- **User Name**: sa
+- **User Name**: gb
 - **Password**:
 
 Os endpoints desenvolvidos podem ser acessados através do Swagger:
 - **Swagger UI**: http://localhost:8080/swagger-ui/index.html
 - Para o funcionamento correto da aplicação, existe uma ordem nas chamadas dos endpoints. Abaixo deixo a ordem com os curls das chamadas:
-- Criação de um cliente:
+- Criação de um veículo:
 ```json
-curl --location 'localhost:8080/megabyteful/customers' \
+curl --location 'localhost:8080/parkingmeter/vehicle' \
 --header 'Content-Type: application/json' \
---data-raw '{
-"name": "Gabi",
-"cpf": 87987987912,
-"phone": 84999999999999,
-"email": "test@gmail.com",
-"appointments": []
+--data '{
+"licensePlate": "AAA0000",
+"ownerName": "Bruna Casagrande"
 }'
 ```
 
-- Criação de um parquímetro:
+- Criação de um estacionamento:
+```json
+curl --location 'localhost:8080/parkingmeter/parking-sessions' \
+--header 'Content-Type: application/json' \
+--data '{
+"licensePlate": "AAA0000",
+"startTime": "2025-01-05T18:51:00",
+"endTime": "2025-01-05T19:51:00",
+"paymentMethod": "PIX"
+}'
+```
+
+- Busca de um veículo pela placa com as sessões de estacionamento:
+```json
+curl --location 'localhost:8080/parkingmeter/vehicle/AAA0000'
+```
 
 ## Testes
 Para executar os testes unitários:
