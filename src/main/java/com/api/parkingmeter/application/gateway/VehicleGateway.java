@@ -8,4 +8,6 @@ public interface VehicleGateway {
   Vehicle save(final Vehicle vehicle);
 
   Optional<Vehicle> findByLicensePlate(final String licensePlate);
+
+  Vehicle update(final Vehicle vehicle);
 }

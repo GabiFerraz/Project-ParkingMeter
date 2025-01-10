@@ -22,13 +22,13 @@ public class UpdateVehicle {
             if (vehicleGateway.findByLicensePlate(newLicensePlate).isPresent()) {
                 throw new VehicleAlreadyExistsException(newLicensePlate);
             }
-            vehicle.updateLicensePlate(newLicensePlate);
+            vehicle.setLicensePlate(newLicensePlate);
         }
 
         if (ownerName != null && !ownerName.equals(vehicle.getOwnerName())) {
-            vehicle.updateOwner(ownerName);
+            vehicle.setOwnerName(ownerName);
         }
 
-        return vehicleGateway.save(vehicle);
+        return vehicleGateway.update(vehicle);
     }
 }
