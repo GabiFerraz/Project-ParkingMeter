@@ -33,6 +33,14 @@ public class Vehicle {
 
   private List<ParkingSessionDto> parkingSessions;
 
+  public void updateLicensePlate(String newLicensePlate) {
+    this.licensePlate = newLicensePlate;
+  }
+
+  public void updateOwner(String newOwnerName) {
+    this.ownerName = newOwnerName;
+  }
+
   public static Vehicle create(final String licensePlate, final String ownerName) {
     return Vehicle.builder()
         .licensePlate(licensePlate)
