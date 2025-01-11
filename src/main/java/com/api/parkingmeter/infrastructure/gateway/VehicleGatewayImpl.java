@@ -78,13 +78,13 @@ public class VehicleGatewayImpl implements VehicleGateway {
 
   @Override
   public Vehicle update(final Vehicle vehicle) {
-    final var entity = vehicleRepository.findByLicensePlate(vehicle.getLicensePlate())
+    final var existingEntity = vehicleRepository.findById(vehicle.getId())
             .orElseThrow(() -> new VehicleNotFoundException(vehicle.getLicensePlate()));
 
-    entity.setLicensePlate(vehicle.getLicensePlate());
-    entity.setOwnerName(vehicle.getOwnerName());
+    existingEntity.setLicensePlate(vehicle.getLicensePlate());
+    existingEntity.setOwnerName(vehicle.getOwnerName());
 
-    final var updatedEntity = vehicleRepository.save(entity);
+    final var updatedEntity = vehicleRepository.save(existingEntity);
 
     return this.toResponse(updatedEntity);
   }

@@ -18,17 +18,24 @@ public class UpdateVehicle {
         final var vehicle = vehicleGateway.findByLicensePlate(currentLicensePlate)
                 .orElseThrow(() -> new VehicleNotFoundException(currentLicensePlate));
 
-        if (newLicensePlate != null && !currentLicensePlate.equals(newLicensePlate)) {
-            if (vehicleGateway.findByLicensePlate(newLicensePlate).isPresent()) {
+        if (newLicensePlate != null && !newLicensePlate.isBlank() && !currentLicensePlate.equals(newLicensePlate)) {
+            final var existingVehicleWithNewPlate = vehicleGateway.findByLicensePlate(newLicensePlate);
+
+            if (existingVehicleWithNewPlate.isPresent() && !existingVehicleWithNewPlate.get().getId().equals(vehicle.getId())) {
                 throw new VehicleAlreadyExistsException(newLicensePlate);
             }
+
             vehicle.setLicensePlate(newLicensePlate);
         }
 
-        if (ownerName != null && !ownerName.equals(vehicle.getOwnerName())) {
+        if (ownerName != null && !ownerName.isBlank() && !ownerName.equals(vehicle.getOwnerName())) {
             vehicle.setOwnerName(ownerName);
         }
 
         return vehicleGateway.update(vehicle);
     }
+
+
+
+
 }
