@@ -4,6 +4,7 @@ import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.domain.ParkingSessionStatus;
 import com.api.parkingmeter.application.dto.VehicleDto;
 import com.api.parkingmeter.application.gateway.ParkingSessionGateway;
+import com.api.parkingmeter.application.usecase.exception.ParkingSessionNotFoundException;
 import com.api.parkingmeter.application.usecase.exception.VehicleNotFoundException;
 import com.api.parkingmeter.infrastructure.persistence.entity.ParkingSessionEntity;
 import com.api.parkingmeter.infrastructure.persistence.entity.VehicleEntity;
@@ -69,7 +70,10 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
 
   @Override
   public void updateStatus(final Integer id, final ParkingSessionStatus status) {
-    final var entity = parkingSessionRepository.findById(id).orElseThrow();
+    final var entity =
+        parkingSessionRepository
+            .findById(id)
+            .orElseThrow(() -> new ParkingSessionNotFoundException(id));
 
     final var newEntity =
         ParkingSessionEntity.builder()
