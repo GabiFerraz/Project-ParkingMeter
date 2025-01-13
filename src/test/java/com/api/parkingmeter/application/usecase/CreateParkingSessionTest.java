@@ -15,6 +15,7 @@ import com.api.parkingmeter.application.usecase.exception.VehicleNotFoundExcepti
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class CreateParkingSessionTest {
 
@@ -33,10 +34,13 @@ class CreateParkingSessionTest {
     final var vehicleGatewayResponse = validVehicle();
     final var parkingSessionGatewayResponse = validParkingSession();
     final var vehicleResponse = validVehicleDto();
+    final ArgumentCaptor<String> licensePlateCaptor = ArgumentCaptor.forClass(String.class);
+    final ArgumentCaptor<ParkingSession> parkingSessionCaptor =
+        ArgumentCaptor.forClass(ParkingSession.class);
 
     when(vehicleGateway.findByLicensePlate(licensePlate))
         .thenReturn(Optional.of(vehicleGatewayResponse));
-    when(parkingSessionGateway.save(any(), any(ParkingSession.class)))
+    when(parkingSessionGateway.save(licensePlateCaptor.capture(), parkingSessionCaptor.capture()))
         .thenReturn(parkingSessionGatewayResponse);
 
     final var response =
@@ -56,7 +60,8 @@ class CreateParkingSessionTest {
     assertThat(response.getStatus()).isEqualTo(ParkingSessionStatus.ACTIVE);
 
     verify(vehicleGateway).findByLicensePlate(licensePlate);
-    verify(parkingSessionGateway).save(any(), any(ParkingSession.class));
+    verify(parkingSessionGateway)
+        .save(licensePlateCaptor.getValue(), parkingSessionCaptor.getValue());
   }
 
   @Test
@@ -74,6 +79,6 @@ class CreateParkingSessionTest {
         .hasMessage("Vehicle with license plate=[AAA0000] not found.");
 
     verify(vehicleGateway).findByLicensePlate(licensePlate);
-    verify(parkingSessionGateway, never()).save(any(), any(ParkingSession.class));
+    verify(parkingSessionGateway, never()).save(any(), any());
   }
 }
