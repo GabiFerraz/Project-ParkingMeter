@@ -9,5 +9,6 @@ public class ParkingSessionNotFoundException extends BusinessException {
 
   public ParkingSessionNotFoundException(final Integer id) {
     super(format(MESSAGE, id), ERROR_CODE);
+    
   }
 }

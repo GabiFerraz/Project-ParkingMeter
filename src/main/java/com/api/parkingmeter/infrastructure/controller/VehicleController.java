@@ -3,6 +3,8 @@ package com.api.parkingmeter.infrastructure.controller;
 import com.api.parkingmeter.application.domain.Vehicle;
 import com.api.parkingmeter.application.usecase.CreateVehicle;
 import com.api.parkingmeter.application.usecase.SearchVehicle;
+import com.api.parkingmeter.application.usecase.UpdateVehicle;
+import com.api.parkingmeter.infrastructure.controller.request.UpdateVehicleRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class VehicleController {
 
   private final CreateVehicle createVehicle;
   private final SearchVehicle searchVehicle;
+  private final UpdateVehicle updateVehicle;
 
   @PostMapping
   public ResponseEntity<Vehicle> create(@Valid @RequestBody final Vehicle vehicle) {
@@ -37,4 +40,19 @@ public class VehicleController {
 
     return ResponseEntity.ok(searchVehicle.execute(licensePlate));
   }
+
+  @PutMapping("/{licensePlate}")
+  public ResponseEntity<Vehicle> updateVehicle(
+          @PathVariable final String licensePlate,
+          @RequestBody @Valid final UpdateVehicleRequest request) {
+
+    final var updatedVehicle = this.updateVehicle.execute(
+            licensePlate,
+            request.getLicensePlate(),
+            request.getOwnerName()
+    );
+
+    return ResponseEntity.ok(updatedVehicle);
+  }
+
 }

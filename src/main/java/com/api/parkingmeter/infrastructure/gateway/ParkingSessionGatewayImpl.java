@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
@@ -111,5 +113,21 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
         .authenticationCode(entity.getAuthenticationCode())
         .status(entity.getStatus())
         .build();
+  }
+
+  @Override
+  public Optional<ParkingSession> findActiveSessionByLicensePlate(final String licensePlate) {
+    return parkingSessionRepository
+            .findByVehicle_LicensePlateAndStatus(licensePlate, ParkingSessionStatus.ACTIVE)
+            .map(this::toParkingSessionDomain);
+  }
+
+  @Override
+  public ParkingSession update(final ParkingSession parkingSession) {
+    final var entity = parkingSessionRepository.findById(parkingSession.getId())
+            .orElseThrow(() -> new ParkingSessionNotFoundException(parkingSession.getId().toString()));
+
+    entity.setEndTime(parkingSession.getEndTime());
+    return toParkingSessionDomain(parkingSessionRepository.save(entity));
   }
 }

@@ -3,6 +3,7 @@ package com.api.parkingmeter.infrastructure.gateway;
 import com.api.parkingmeter.application.domain.Vehicle;
 import com.api.parkingmeter.application.dto.ParkingSessionDto;
 import com.api.parkingmeter.application.gateway.VehicleGateway;
+import com.api.parkingmeter.application.usecase.exception.VehicleNotFoundException;
 import com.api.parkingmeter.infrastructure.persistence.entity.ParkingSessionEntity;
 import com.api.parkingmeter.infrastructure.persistence.entity.VehicleEntity;
 import com.api.parkingmeter.infrastructure.persistence.repository.VehicleRepository;
@@ -74,4 +75,19 @@ public class VehicleGatewayImpl implements VehicleGateway {
                     .build())
         .toList();
   }
+
+  @Override
+  public Vehicle update(final Vehicle vehicle) {
+    final var existingEntity = vehicleRepository.findById(vehicle.getId())
+            .orElseThrow(() -> new VehicleNotFoundException(vehicle.getLicensePlate()));
+
+    existingEntity.setLicensePlate(vehicle.getLicensePlate());
+    existingEntity.setOwnerName(vehicle.getOwnerName());
+
+    final var updatedEntity = vehicleRepository.save(existingEntity);
+
+    return this.toResponse(updatedEntity);
+  }
+
+
 }
