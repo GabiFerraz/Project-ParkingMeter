@@ -5,6 +5,8 @@ import com.api.parkingmeter.application.domain.ParkingSessionStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 public interface ParkingSessionGateway {
 
   ParkingSession save(final String licensePlate, final ParkingSession parkingSession);
@@ -12,4 +14,8 @@ public interface ParkingSessionGateway {
   Page<ParkingSession> findByStatus(final ParkingSessionStatus status, Pageable pageable);
 
   void updateStatus(final Integer id, final ParkingSessionStatus status);
+
+  Optional<ParkingSession> findActiveSessionByLicensePlate(final String licensePlate);
+  ParkingSession update(final ParkingSession parkingSession);
+
 }
