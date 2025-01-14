@@ -17,4 +17,6 @@ public interface ParkingSessionGateway {
   Optional<ParkingSession> findActiveSessionByLicensePlate(final String licensePlate);
 
   ParkingSession update(final ParkingSession parkingSession);
+
+  Optional<ParkingSession> findByAuthenticationCode(final String authenticationCode);
 }

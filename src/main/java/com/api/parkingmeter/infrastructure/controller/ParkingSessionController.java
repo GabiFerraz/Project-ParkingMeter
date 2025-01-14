@@ -2,6 +2,7 @@ package com.api.parkingmeter.infrastructure.controller;
 
 import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.usecase.CreateParkingSession;
+import com.api.parkingmeter.application.usecase.SearchParkingSession;
 import com.api.parkingmeter.application.usecase.UpdateParkingSession;
 import com.api.parkingmeter.infrastructure.controller.request.CreateParkingSessionRequest;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ public class ParkingSessionController {
 
   private final CreateParkingSession createParkingSession;
   private final UpdateParkingSession updateParkingSession;
+  private final SearchParkingSession searchParkingSession;
 
   @PostMapping
   public ResponseEntity<ParkingSession> create(
@@ -44,4 +46,17 @@ public class ParkingSessionController {
     final var updatedSession = updateParkingSession.execute(licensePlate);
     return ResponseEntity.ok(updatedSession);
   }
+
+  @GetMapping("/{licensePlate}")
+  public ResponseEntity<ParkingSession> findByLicensePlate(@PathVariable String licensePlate) {
+    final var parkingSession = searchParkingSession.execute(licensePlate);
+    return ResponseEntity.ok(parkingSession);
+  }
+
+  @GetMapping("/code/{authenticationCode}")
+  public ResponseEntity<ParkingSession> findByAuthenticationCode(@PathVariable String authenticationCode) {
+    final var parkingSession = searchParkingSession.execute(authenticationCode);
+    return ResponseEntity.ok(parkingSession);
+  }
+
 }
