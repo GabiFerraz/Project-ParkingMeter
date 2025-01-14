@@ -72,7 +72,10 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
 
   @Override
   public void updateStatus(final Integer id, final ParkingSessionStatus status) {
-    final var entity = parkingSessionRepository.findById(id).orElseThrow();
+    final var entity =
+        parkingSessionRepository
+            .findById(id)
+            .orElseThrow(() -> new ParkingSessionNotFoundException(id));
 
     final var newEntity =
         ParkingSessionEntity.builder()
