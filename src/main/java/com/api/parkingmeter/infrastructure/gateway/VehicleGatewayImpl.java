@@ -41,6 +41,21 @@ public class VehicleGatewayImpl implements VehicleGateway {
     return entity.map(this::toResponseWithParkingSessions);
   }
 
+  @Override
+  public Vehicle update(final Vehicle vehicle) {
+    final var existingEntity =
+        vehicleRepository
+            .findById(vehicle.getId())
+            .orElseThrow(() -> new VehicleNotFoundException(vehicle.getLicensePlate()));
+
+    existingEntity.setLicensePlate(vehicle.getLicensePlate());
+    existingEntity.setOwnerName(vehicle.getOwnerName());
+
+    final var updatedEntity = vehicleRepository.save(existingEntity);
+
+    return this.toResponse(updatedEntity);
+  }
+
   private Vehicle toResponse(final VehicleEntity entity) {
     return Vehicle.builder()
         .id(entity.getId())
@@ -75,19 +90,4 @@ public class VehicleGatewayImpl implements VehicleGateway {
                     .build())
         .toList();
   }
-
-  @Override
-  public Vehicle update(final Vehicle vehicle) {
-    final var existingEntity = vehicleRepository.findById(vehicle.getId())
-            .orElseThrow(() -> new VehicleNotFoundException(vehicle.getLicensePlate()));
-
-    existingEntity.setLicensePlate(vehicle.getLicensePlate());
-    existingEntity.setOwnerName(vehicle.getOwnerName());
-
-    final var updatedEntity = vehicleRepository.save(existingEntity);
-
-    return this.toResponse(updatedEntity);
-  }
-
-
 }

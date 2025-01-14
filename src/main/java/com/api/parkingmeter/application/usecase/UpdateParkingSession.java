@@ -6,19 +6,19 @@ import com.api.parkingmeter.application.usecase.exception.ParkingSessionNotFound
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 @RequiredArgsConstructor
 public class UpdateParkingSession {
-    private final ParkingSessionGateway parkingSessionGateway;
+  private final ParkingSessionGateway parkingSessionGateway;
 
-    public ParkingSession execute(final String licensePlate) {
-        final var parkingSession = parkingSessionGateway.findActiveSessionByLicensePlate(licensePlate)
-                .orElseThrow(() -> new ParkingSessionNotFoundException(licensePlate));
+  public ParkingSession execute(final String licensePlate) {
+    final var parkingSession =
+        parkingSessionGateway
+            .findActiveSessionByLicensePlate(licensePlate)
+            .orElseThrow(() -> new ParkingSessionNotFoundException(licensePlate));
 
-        parkingSession.setEndTime(parkingSession.getEndTime().plusHours(1));
+    parkingSession.setEndTime(parkingSession.getEndTime().plusHours(1));
 
-        return parkingSessionGateway.update(parkingSession);
-    }
+    return parkingSessionGateway.update(parkingSession);
+  }
 }

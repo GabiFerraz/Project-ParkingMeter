@@ -43,16 +43,12 @@ public class VehicleController {
 
   @PutMapping("/{licensePlate}")
   public ResponseEntity<Vehicle> updateVehicle(
-          @PathVariable final String licensePlate,
-          @RequestBody @Valid final UpdateVehicleRequest request) {
+      @PathVariable final String licensePlate,
+      @RequestBody @Valid final UpdateVehicleRequest request) {
 
-    final var updatedVehicle = this.updateVehicle.execute(
-            licensePlate,
-            request.getLicensePlate(),
-            request.getOwnerName()
-    );
+    final var updatedVehicle =
+        this.updateVehicle.execute(licensePlate, request.getLicensePlate(), request.getOwnerName());
 
     return ResponseEntity.ok(updatedVehicle);
   }
-
 }

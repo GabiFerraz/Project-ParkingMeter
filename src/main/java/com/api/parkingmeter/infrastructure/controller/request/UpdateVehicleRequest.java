@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateVehicleRequest {
-    private String licensePlate;
-    private String ownerName;
+  private String licensePlate;
+  private String ownerName;
 }

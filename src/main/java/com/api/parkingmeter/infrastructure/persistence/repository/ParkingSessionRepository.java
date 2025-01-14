@@ -2,12 +2,11 @@ package com.api.parkingmeter.infrastructure.persistence.repository;
 
 import com.api.parkingmeter.application.domain.ParkingSessionStatus;
 import com.api.parkingmeter.infrastructure.persistence.entity.ParkingSessionEntity;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
 
 public interface ParkingSessionRepository extends JpaRepository<ParkingSessionEntity, Integer> {
 
@@ -16,6 +15,6 @@ public interface ParkingSessionRepository extends JpaRepository<ParkingSessionEn
       final ParkingSessionStatus status, final Pageable pageable);
 
   @EntityGraph(attributePaths = {"vehicle"})
-  Optional<ParkingSessionEntity> findByVehicle_LicensePlateAndStatus(String licensePlate, ParkingSessionStatus status);
-
+  Optional<ParkingSessionEntity> findParkingSessionByStatusAndVehicle_LicensePlate(
+      final ParkingSessionStatus status, final String licensePlate);
 }

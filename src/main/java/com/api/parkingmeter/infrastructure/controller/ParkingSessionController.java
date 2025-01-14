@@ -39,9 +39,9 @@ public class ParkingSessionController {
   }
 
   @PutMapping("/extend")
-  public ResponseEntity<ParkingSession> extendParkingSession(@RequestParam String licensePlate) {
+  public ResponseEntity<ParkingSession> extendParkingSession(
+      @RequestParam final String licensePlate) {
     final var updatedSession = updateParkingSession.execute(licensePlate);
     return ResponseEntity.ok(updatedSession);
   }
-
 }
