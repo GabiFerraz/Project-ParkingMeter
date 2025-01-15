@@ -139,8 +139,7 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
   @Override
   public Optional<ParkingSession> findByAuthenticationCode(final String authenticationCode) {
     return parkingSessionRepository
-            .findByAuthenticationCode(authenticationCode)
-            .map(this::toParkingSessionDomain);
+        .findByAuthenticationCode(authenticationCode)
+        .map(this::toParkingSessionDomain);
   }
-
 }

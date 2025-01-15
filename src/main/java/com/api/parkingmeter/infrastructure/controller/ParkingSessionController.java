@@ -44,19 +44,22 @@ public class ParkingSessionController {
   public ResponseEntity<ParkingSession> extendParkingSession(
       @RequestParam final String licensePlate) {
     final var updatedSession = updateParkingSession.execute(licensePlate);
+
     return ResponseEntity.ok(updatedSession);
   }
 
   @GetMapping("/{licensePlate}")
   public ResponseEntity<ParkingSession> findByLicensePlate(@PathVariable String licensePlate) {
     final var parkingSession = searchParkingSession.execute(licensePlate);
+
     return ResponseEntity.ok(parkingSession);
   }
 
   @GetMapping("/code/{authenticationCode}")
-  public ResponseEntity<ParkingSession> findByAuthenticationCode(@PathVariable String authenticationCode) {
+  public ResponseEntity<ParkingSession> findByAuthenticationCode(
+      @PathVariable String authenticationCode) {
     final var parkingSession = searchParkingSession.execute(authenticationCode);
+
     return ResponseEntity.ok(parkingSession);
   }
-
 }

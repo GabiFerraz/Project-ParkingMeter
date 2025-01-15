@@ -3,10 +3,9 @@ package com.api.parkingmeter.application.usecase;
 import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.gateway.ParkingSessionGateway;
 import com.api.parkingmeter.application.usecase.exception.ParkingSessionNotFoundException;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor
@@ -20,10 +19,7 @@ public class UpdateParkingSession {
             .orElseThrow(() -> new ParkingSessionNotFoundException(licensePlate));
 
     parkingSession.setEndTime(parkingSession.getEndTime().plusHours(1));
-
-
     parkingSession.setTotalCost(parkingSession.getTotalCost().add(BigDecimal.valueOf(5)));
-
 
     return parkingSessionGateway.update(parkingSession);
   }

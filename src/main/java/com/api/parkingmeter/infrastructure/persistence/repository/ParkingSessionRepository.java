@@ -20,5 +20,4 @@ public interface ParkingSessionRepository extends JpaRepository<ParkingSessionEn
 
   @EntityGraph(attributePaths = {"vehicle"})
   Optional<ParkingSessionEntity> findByAuthenticationCode(final String authenticationCode);
-
 }

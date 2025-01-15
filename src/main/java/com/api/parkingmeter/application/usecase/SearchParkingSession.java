@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class SearchParkingSession {
 
-    private final ParkingSessionGateway parkingSessionGateway;
+  private final ParkingSessionGateway parkingSessionGateway;
 
-    public ParkingSession execute(final String authenticationCode) {
-        return parkingSessionGateway.findByAuthenticationCode(authenticationCode)
-                .orElseThrow(() -> new ParkingSessionNotFoundException(authenticationCode));
-    }
+  public ParkingSession execute(final String authenticationCode) {
+    return parkingSessionGateway
+        .findByAuthenticationCode(authenticationCode)
+        .orElseThrow(() -> new ParkingSessionNotFoundException(authenticationCode));
+  }
 }

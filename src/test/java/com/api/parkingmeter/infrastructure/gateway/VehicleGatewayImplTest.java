@@ -3,7 +3,9 @@ package com.api.parkingmeter.infrastructure.gateway;
 import static com.api.parkingmeter.infrastructure.gateway.fixture.VehicleGatewayImplTestFixture.vehicleDomain;
 import static com.api.parkingmeter.infrastructure.gateway.fixture.VehicleGatewayImplTestFixture.vehicleEntity;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.api.parkingmeter.infrastructure.persistence.entity.VehicleEntity;
 import com.api.parkingmeter.infrastructure.persistence.repository.VehicleRepository;
