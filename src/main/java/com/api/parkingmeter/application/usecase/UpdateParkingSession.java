@@ -14,7 +14,7 @@ public class UpdateParkingSession {
   private final ParkingSessionGateway parkingSessionGateway;
 
   public ParkingSession execute(final String licensePlate) {
-    ParkingSession parkingSession =
+    final ParkingSession parkingSession =
         parkingSessionGateway
             .findActiveSessionByLicensePlate(licensePlate)
             .orElseThrow(() -> new ParkingSessionNotFoundException(licensePlate));
@@ -22,10 +22,8 @@ public class UpdateParkingSession {
     parkingSession.setEndTime(parkingSession.getEndTime().plusHours(1));
 
 
-    BigDecimal additionalCost = BigDecimal.valueOf(10.00);
-    BigDecimal updatedTotalCost = parkingSession.getTotalCost().add(additionalCost);
+    parkingSession.setTotalCost(parkingSession.getTotalCost().add(BigDecimal.valueOf(5)));
 
-    parkingSession.setTotalCost(updatedTotalCost);
 
     return parkingSessionGateway.update(parkingSession);
   }
