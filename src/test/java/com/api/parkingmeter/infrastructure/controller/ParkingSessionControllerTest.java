@@ -1,6 +1,12 @@
 package com.api.parkingmeter.infrastructure.controller;
 
-import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.*;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.AUTHENTICATION_CODE;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.END_TIME;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.LICENSE_PLATE;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.OWNER_NAME;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.START_TIME;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.validCreateResponse;
+import static com.api.parkingmeter.infrastructure.controller.fixture.ParkingSessionControllerTestFixture.validRequest;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

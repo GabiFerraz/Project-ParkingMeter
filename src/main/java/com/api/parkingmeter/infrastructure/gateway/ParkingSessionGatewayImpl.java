@@ -109,6 +109,7 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
                         parkingSession.getVehicle().getLicensePlate()));
 
     entity.setEndTime(parkingSession.getEndTime());
+    entity.setTotalCost(parkingSession.getTotalCost());
 
     return toParkingSessionDomain(parkingSessionRepository.save(entity));
   }
@@ -133,5 +134,12 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
         .authenticationCode(entity.getAuthenticationCode())
         .status(entity.getStatus())
         .build();
+  }
+
+  @Override
+  public Optional<ParkingSession> findByAuthenticationCode(final String authenticationCode) {
+    return parkingSessionRepository
+        .findByAuthenticationCode(authenticationCode)
+        .map(this::toParkingSessionDomain);
   }
 }

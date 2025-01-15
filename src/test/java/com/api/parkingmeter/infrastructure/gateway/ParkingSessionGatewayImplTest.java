@@ -1,9 +1,23 @@
 package com.api.parkingmeter.infrastructure.gateway;
 
-import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.*;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.AUTHENTICATION_CODE;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.END_TIME;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.LICENSE_PLATE;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.OWNER_NAME;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.START_TIME;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.parkingSession;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.validPageOfParkingSessions;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.validParkingSessionEntity;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.validParkingSessionEntityWithStatusFinished;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.validVehicleEntity;
+import static com.api.parkingmeter.infrastructure.gateway.fixture.ParkingSessionGatewayImplTestFixture.validVehicleWithParkingSession;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.api.parkingmeter.application.domain.ParkingSessionStatus;
 import com.api.parkingmeter.application.domain.PaymentMethod;

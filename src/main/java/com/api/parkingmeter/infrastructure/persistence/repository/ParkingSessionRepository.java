@@ -17,4 +17,7 @@ public interface ParkingSessionRepository extends JpaRepository<ParkingSessionEn
   @EntityGraph(attributePaths = {"vehicle"})
   Optional<ParkingSessionEntity> findParkingSessionByStatusAndVehicle_LicensePlate(
       final ParkingSessionStatus status, final String licensePlate);
+
+  @EntityGraph(attributePaths = {"vehicle"})
+  Optional<ParkingSessionEntity> findByAuthenticationCode(final String authenticationCode);
 }

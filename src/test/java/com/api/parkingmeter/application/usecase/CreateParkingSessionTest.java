@@ -1,10 +1,15 @@
 package com.api.parkingmeter.application.usecase;
 
-import static com.api.parkingmeter.application.usecase.fixture.CreateParkingSessionTestFixture.*;
+import static com.api.parkingmeter.application.usecase.fixture.CreateParkingSessionTestFixture.validParkingSession;
+import static com.api.parkingmeter.application.usecase.fixture.CreateParkingSessionTestFixture.validVehicle;
+import static com.api.parkingmeter.application.usecase.fixture.CreateParkingSessionTestFixture.validVehicleDto;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.api.parkingmeter.application.domain.ParkingSession;
 import com.api.parkingmeter.application.domain.ParkingSessionStatus;
