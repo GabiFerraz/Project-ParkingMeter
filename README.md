@@ -12,20 +12,22 @@ informações para fins de fiscalização.
 A API permite:
 - **Criar** um veículo.
 - **Iniciar** um estacionamento.
-- **Encerrar** automaticamente um estacionamento alterando o status dele para finalizado.
 - **Buscar** um veículo pela placa e obter as informações dele junto com as sessões de estacionamento.
-- **Buscar** uma sessão de estacionamento pelo id e obter as informações do veículo.
+- **Buscar** uma sessão de estacionamento pelo código autenticador único, gerado ao iniciar um estacionamento,
+e obter junto às informações do veículo.
 - **Atualizar** as informações de um veículo.
-- **Atualizar** um estacionamento ajustando o horário do término.
+- **Atualizar** o tempo de um estacionamento adicionando 1 hora no término, quando possível.
+- **Encerrar** automaticamente um estacionamento alterando o status dele para finalizado quando o tempo acabar.
 
 ## Tecnologias Utilizadas
 - **Java 17**
 - **Spring Boot**
-- **Maven** para gerenciamento de dependências
-- **Banco de Dados H2** para armazenamento e testes
-- **Mockito** e **JUnit 5** para testes unitários
-- **Lombok** para reduzir o código boilerplate
-- **Swagger** para documentação da API
+- **Spring Data JPA**
+- **Maven**
+- **Banco de Dados H2**
+- **Mockito** e **JUnit 5**
+- **Lombok**
+- **Swagger**
 
 ## Estrutura do Projeto
 O projeto está organizado nas seguintes camadas:
@@ -72,6 +74,7 @@ Para visualização dos dados da api no banco de dados, acessar localmente o ban
 
 Os endpoints desenvolvidos podem ser acessados através do Swagger:
 - **Swagger UI**: http://localhost:8080/swagger-ui/index.html
+- **Swagger JSON**: http://localhost:8080/v3/api-docs
 - Para o funcionamento correto da aplicação, existe uma ordem nas chamadas dos endpoints. Abaixo deixo a ordem com os curls das chamadas:
 - Criação de um veículo:
 ```json
@@ -79,7 +82,7 @@ curl --location 'localhost:8080/parkingmeter/vehicle' \
 --header 'Content-Type: application/json' \
 --data '{
 "licensePlate": "AAA0000",
-"ownerName": "Bruna Casagrande"
+"ownerName": "Bruna"
 }'
 ```
 
@@ -89,8 +92,8 @@ curl --location 'localhost:8080/parkingmeter/parking-sessions' \
 --header 'Content-Type: application/json' \
 --data '{
 "licensePlate": "AAA0000",
-"startTime": "2025-01-05T18:51:00",
-"endTime": "2025-01-05T19:51:00",
+"startTime": "2025-01-14T22:48:00",
+"endTime": "2025-01-14T23:49:00",
 "paymentMethod": "PIX"
 }'
 ```
@@ -98,6 +101,27 @@ curl --location 'localhost:8080/parkingmeter/parking-sessions' \
 - Busca de um veículo pela placa com as sessões de estacionamento:
 ```json
 curl --location 'localhost:8080/parkingmeter/vehicle/AAA0000'
+```
+
+- Busca de uma sessão de estacionamento pelo código de autenticação:
+```json
+curl --location 'localhost:8080/parkingmeter/parking-sessions/code/0a515ada-3427-4da9-abab-0861d4265c38'
+```
+
+- Atualização de um veículo:
+```json
+curl --location --request PUT 'localhost:8080/parkingmeter/vehicle/AAA0000' \
+--header 'Content-Type: application/json' \
+--data '{
+"licensePlate": "AAA0001",
+"ownerName": "Amanda"
+}'
+```
+
+- Atualização do tempo de um estacionamento:
+```json
+curl --location --request PUT 'localhost:8080/parkingmeter/parking-sessions/extend?licensePlate=AAA0000' \
+--header 'Content-Type: application/json'
 ```
 
 ## Testes
