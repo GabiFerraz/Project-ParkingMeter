@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 public class ParkingSessionControllerTestFixture {
 
   public static final String LICENSE_PLATE = "AAA0000";
-  public static final LocalDateTime START_TIME = LocalDateTime.parse("2025-01-10T10:00:00");
-  public static final LocalDateTime END_TIME = LocalDateTime.parse("2025-01-10T11:00:00");
+  public static final LocalDateTime START_TIME = LocalDateTime.parse("2126-01-10T10:00:00");
+  public static final LocalDateTime END_TIME = LocalDateTime.parse("2126-01-10T11:00:01");
   public static final String AUTHENTICATION_CODE = "123uuid456";
   public static final String OWNER_NAME = "John Doe";
 
