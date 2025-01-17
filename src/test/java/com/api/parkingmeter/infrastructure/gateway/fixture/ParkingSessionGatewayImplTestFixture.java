@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import com.api.parkingmeter.application.domain.Vehicle;
-
 
 public class ParkingSessionGatewayImplTestFixture {
   public static final String LICENSE_PLATE = "AAA0000";
@@ -86,39 +84,59 @@ public class ParkingSessionGatewayImplTestFixture {
 
   public static ParkingSessionEntity parkingSessionEntity() {
     return ParkingSessionEntity.builder()
-            .id(1)
-            .startTime(LocalDateTime.now())
-            .endTime(LocalDateTime.now().plusHours(2))
-            .status(ParkingSessionStatus.ACTIVE)
-            .totalCost(BigDecimal.valueOf(15.00))
-            .vehicle(vehicleEntity())
-            .build();
+        .id(1)
+        .startTime(LocalDateTime.now())
+        .endTime(LocalDateTime.now().plusHours(2))
+        .status(ParkingSessionStatus.ACTIVE)
+        .totalCost(BigDecimal.valueOf(15.00))
+        .vehicle(vehicleEntity())
+        .build();
   }
 
   public static ParkingSession parkingSessionDomain() {
     return ParkingSession.builder()
-            .id(1)
-            .startTime(LocalDateTime.now())
-            .endTime(LocalDateTime.now().plusHours(2))
-            .status(ParkingSessionStatus.ACTIVE)
-            .totalCost(BigDecimal.valueOf(15.00))
-            .vehicle(vehicleDto())
-            .build();
+        .id(1)
+        .startTime(LocalDateTime.now())
+        .endTime(LocalDateTime.now().plusHours(2))
+        .status(ParkingSessionStatus.ACTIVE)
+        .totalCost(BigDecimal.valueOf(15.00))
+        .vehicle(vehicleDto())
+        .build();
   }
 
   public static VehicleEntity vehicleEntity() {
-    return VehicleEntity.builder()
-            .id(1)
-            .licensePlate("AAA0000")
-            .ownerName(OWNER_NAME)
-            .build();
+    return VehicleEntity.builder().id(1).licensePlate("AAA0000").ownerName(OWNER_NAME).build();
   }
 
   public static VehicleDto vehicleDto() {
-    return VehicleDto.builder()
-            .id(1)
-            .licensePlate("AAA0000")
-            .ownerName(OWNER_NAME)
-            .build();
+    return VehicleDto.builder().id(1).licensePlate("AAA0000").ownerName(OWNER_NAME).build();
+  }
+
+  public static ParkingSessionEntity validUpdatedParkingSessionEntity() {
+    return ParkingSessionEntity.builder()
+        .id(1)
+        .vehicle(validVehicleEntity())
+        .startTime(START_TIME)
+        .endTime(LocalDateTime.parse("2025-01-10T12:00:00"))
+        .extendable(true)
+        .paymentMethod(PaymentMethod.DEBIT_CARD)
+        .totalCost(BigDecimal.valueOf(15.00))
+        .authenticationCode(AUTHENTICATION_CODE)
+        .status(ParkingSessionStatus.ACTIVE)
+        .build();
+  }
+
+  public static ParkingSession validUpdatedParkingSession() {
+    return ParkingSession.builder()
+        .id(1)
+        .vehicle(vehicleDto())
+        .startTime(START_TIME)
+        .endTime(LocalDateTime.parse("2025-01-10T12:00:00"))
+        .extendable(true)
+        .paymentMethod(PaymentMethod.DEBIT_CARD)
+        .totalCost(BigDecimal.valueOf(15.00))
+        .authenticationCode(AUTHENTICATION_CODE)
+        .status(ParkingSessionStatus.ACTIVE)
+        .build();
   }
 }

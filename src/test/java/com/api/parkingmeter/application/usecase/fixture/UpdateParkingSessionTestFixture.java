@@ -11,14 +11,17 @@ public class UpdateParkingSessionTestFixture {
 
   private static final String LICENSE_PLATE = "XYZ1234";
   private static final String AUTHENTICATION_CODE = "auth-123";
+  public static final LocalDateTime START_TIME = LocalDateTime.parse("2025-02-10T10:00:00");
+  public static final LocalDateTime END_TIME = LocalDateTime.parse("2025-02-10T11:00:00");
+  public static final LocalDateTime NEW_END_TIME = LocalDateTime.parse("2025-02-10T12:00:00");
 
   public static ParkingSession activeParkingSession() {
     return ParkingSession.builder()
         .id(1)
         .vehicle(
             VehicleDto.builder().id(1).licensePlate(LICENSE_PLATE).ownerName("John Doe").build())
-        .startTime(LocalDateTime.now().minusHours(1))
-        .endTime(LocalDateTime.now())
+        .startTime(START_TIME)
+        .endTime(END_TIME)
         .extendable(true)
         .paymentMethod(PaymentMethod.PIX)
         .totalCost(BigDecimal.valueOf(10.00))
@@ -32,11 +35,26 @@ public class UpdateParkingSessionTestFixture {
         .id(1)
         .vehicle(
             VehicleDto.builder().id(1).licensePlate(LICENSE_PLATE).ownerName("John Doe").build())
-        .startTime(LocalDateTime.now().minusHours(1))
-        .endTime(LocalDateTime.now().plusHours(1))
-        .extendable(true)
+        .startTime(START_TIME)
+        .endTime(NEW_END_TIME)
+        .extendable(false)
         .paymentMethod(PaymentMethod.PIX)
-        .totalCost(BigDecimal.valueOf(20.00)) // Valor atualizado
+        .totalCost(BigDecimal.valueOf(15.00))
+        .authenticationCode(AUTHENTICATION_CODE)
+        .status(ParkingSessionStatus.ACTIVE)
+        .build();
+  }
+
+  public static ParkingSession activeParkingSessionNotExtendable() {
+    return ParkingSession.builder()
+        .id(1)
+        .vehicle(
+            VehicleDto.builder().id(1).licensePlate(LICENSE_PLATE).ownerName("John Doe").build())
+        .startTime(START_TIME)
+        .endTime(NEW_END_TIME)
+        .extendable(false)
+        .paymentMethod(PaymentMethod.PIX)
+        .totalCost(BigDecimal.valueOf(15.00))
         .authenticationCode(AUTHENTICATION_CODE)
         .status(ParkingSessionStatus.ACTIVE)
         .build();

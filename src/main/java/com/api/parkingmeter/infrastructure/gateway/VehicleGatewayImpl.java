@@ -20,7 +20,6 @@ public class VehicleGatewayImpl implements VehicleGateway {
 
   private final VehicleRepository vehicleRepository;
 
-
   @Override
   public Vehicle save(final Vehicle vehicle) {
     final var entity =

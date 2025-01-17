@@ -47,7 +47,10 @@ class SearchParkingSessionTest {
 
     assertThatThrownBy(() -> searchParkingSession.execute(invalidAuthenticationCode))
         .isInstanceOf(ParkingSessionNotFoundException.class)
-        .hasMessage("No parking session were found for the car with license plate=[" + invalidAuthenticationCode + "].");
+        .hasMessage(
+            "No parking session were found for the authentication code=["
+                + invalidAuthenticationCode
+                + "].");
 
     verify(parkingSessionGateway).findByAuthenticationCode(invalidAuthenticationCode);
   }

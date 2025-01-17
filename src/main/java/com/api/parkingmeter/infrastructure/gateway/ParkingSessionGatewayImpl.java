@@ -20,6 +20,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
 
+  private static final String MESSAGE_ERROR =
+      "No parking session were found for the car with license plate=[%s].";
+
   private final ParkingSessionRepository parkingSessionRepository;
   private final VehicleRepository vehicleRepository;
 
@@ -106,7 +109,7 @@ public class ParkingSessionGatewayImpl implements ParkingSessionGateway {
             .orElseThrow(
                 () ->
                     new ParkingSessionNotFoundException(
-                        parkingSession.getVehicle().getLicensePlate()));
+                        MESSAGE_ERROR, parkingSession.getVehicle().getLicensePlate()));
 
     entity.setEndTime(parkingSession.getEndTime());
     entity.setTotalCost(parkingSession.getTotalCost());

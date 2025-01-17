@@ -17,9 +17,6 @@ import com.api.parkingmeter.infrastructure.persistence.entity.ParkingSessionEnti
 import com.api.parkingmeter.infrastructure.persistence.entity.VehicleEntity;
 import com.api.parkingmeter.infrastructure.persistence.repository.ParkingSessionRepository;
 import com.api.parkingmeter.infrastructure.persistence.repository.VehicleRepository;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -136,31 +133,39 @@ class ParkingSessionGatewayImplTest {
 
   @Test
   void shouldUpdateParkingSessionSuccessfully() {
-    final var existingSessionEntity = parkingSessionEntity();
-    final var updatedSessionEntity = parkingSessionEntity();
-
-    updatedSessionEntity.setEndTime(LocalDateTime.now().plusHours(1));
-    updatedSessionEntity.setTotalCost(BigDecimal.valueOf(20.00));
-
-    final var updatedDomainSession = parkingSessionDomain();
-    updatedDomainSession.setEndTime(updatedSessionEntity.getEndTime());
-    updatedDomainSession.setTotalCost(updatedSessionEntity.getTotalCost());
+    final var licensePlate = "AAA0000";
+    final var existingSessionEntity = validParkingSessionEntity();
+    final var updatedSessionEntity = validUpdatedParkingSessionEntity();
+    final var updatedDomainSession = validUpdatedParkingSession();
+    final ArgumentCaptor<ParkingSessionEntity> parkingSessionCaptor =
+        ArgumentCaptor.forClass(ParkingSessionEntity.class);
 
     when(parkingSessionRepository.findParkingSessionByStatusAndVehicle_LicensePlate(
-            ParkingSessionStatus.ACTIVE, updatedDomainSession.getVehicle().getLicensePlate()))
-            .thenReturn(Optional.of(existingSessionEntity));
-
-    when(parkingSessionRepository.save(any(ParkingSessionEntity.class)))
-            .thenReturn(updatedSessionEntity);
+            ParkingSessionStatus.ACTIVE, licensePlate))
+        .thenReturn(Optional.of(existingSessionEntity));
+    when(parkingSessionRepository.save(parkingSessionCaptor.capture()))
+        .thenReturn(updatedSessionEntity);
 
     final var response = parkingSessionGateway.update(updatedDomainSession);
 
-    assertThat(response.getEndTime()).isEqualTo(updatedSessionEntity.getEndTime());
-    assertThat(response.getTotalCost()).isEqualTo(updatedSessionEntity.getTotalCost());
+    assertThat(response.getId()).isEqualTo(updatedDomainSession.getId());
+    assertThat(response.getVehicle().getId()).isEqualTo(updatedDomainSession.getVehicle().getId());
+    assertThat(response.getVehicle().getLicensePlate())
+        .isEqualTo(updatedDomainSession.getVehicle().getLicensePlate());
+    assertThat(response.getEndTime()).isEqualTo(updatedDomainSession.getEndTime());
+    assertThat(response.getTotalCost()).isEqualTo(updatedDomainSession.getTotalCost());
 
-    verify(parkingSessionRepository).findParkingSessionByStatusAndVehicle_LicensePlate(
-            ParkingSessionStatus.ACTIVE, updatedDomainSession.getVehicle().getLicensePlate());
-    verify(parkingSessionRepository).save(existingSessionEntity);
+    verify(parkingSessionRepository)
+        .findParkingSessionByStatusAndVehicle_LicensePlate(
+            ParkingSessionStatus.ACTIVE, licensePlate);
+
+    final var parkingSessionCaptured = parkingSessionCaptor.getValue();
+    verify(parkingSessionRepository).save(parkingSessionCaptured);
+
+    assertThat(parkingSessionCaptured.getId()).isEqualTo(updatedSessionEntity.getId());
+    assertThat(parkingSessionCaptured.getEndTime()).isEqualTo(updatedSessionEntity.getEndTime());
+    assertThat(parkingSessionCaptured.getTotalCost())
+        .isEqualTo(updatedSessionEntity.getTotalCost());
   }
 
   @Test
@@ -169,13 +174,17 @@ class ParkingSessionGatewayImplTest {
 
     when(parkingSessionRepository.findParkingSessionByStatusAndVehicle_LicensePlate(
             ParkingSessionStatus.ACTIVE, nonExistentSession.getVehicle().getLicensePlate()))
-            .thenReturn(Optional.empty());
+        .thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> parkingSessionGateway.update(nonExistentSession))
-            .isInstanceOf(ParkingSessionNotFoundException.class)
-            .hasMessage("No parking session were found for the car with license plate=[" + nonExistentSession.getVehicle().getLicensePlate() + "].");
+        .isInstanceOf(ParkingSessionNotFoundException.class)
+        .hasMessage(
+            "No parking session were found for the car with license plate=["
+                + nonExistentSession.getVehicle().getLicensePlate()
+                + "].");
 
-    verify(parkingSessionRepository).findParkingSessionByStatusAndVehicle_LicensePlate(
+    verify(parkingSessionRepository)
+        .findParkingSessionByStatusAndVehicle_LicensePlate(
             ParkingSessionStatus.ACTIVE, nonExistentSession.getVehicle().getLicensePlate());
     verify(parkingSessionRepository, never()).save(any());
   }
@@ -185,7 +194,8 @@ class ParkingSessionGatewayImplTest {
     final var authenticationCode = "AUTH12345";
     final var entity = parkingSessionEntity();
 
-    when(parkingSessionRepository.findByAuthenticationCode(authenticationCode)).thenReturn(Optional.of(entity));
+    when(parkingSessionRepository.findByAuthenticationCode(authenticationCode))
+        .thenReturn(Optional.of(entity));
 
     final var response = parkingSessionGateway.findByAuthenticationCode(authenticationCode);
 
@@ -201,7 +211,8 @@ class ParkingSessionGatewayImplTest {
   void shouldReturnEmptyWhenAuthenticationCodeNotFound() {
     final var authenticationCode = "INVALID_CODE";
 
-    when(parkingSessionRepository.findByAuthenticationCode(authenticationCode)).thenReturn(Optional.empty());
+    when(parkingSessionRepository.findByAuthenticationCode(authenticationCode))
+        .thenReturn(Optional.empty());
 
     final var response = parkingSessionGateway.findByAuthenticationCode(authenticationCode);
 
@@ -215,8 +226,9 @@ class ParkingSessionGatewayImplTest {
     final var licensePlate = "AAA0000";
     final var entity = parkingSessionEntity();
 
-    when(parkingSessionRepository.findParkingSessionByStatusAndVehicle_LicensePlate(ParkingSessionStatus.ACTIVE, licensePlate))
-            .thenReturn(Optional.of(entity));
+    when(parkingSessionRepository.findParkingSessionByStatusAndVehicle_LicensePlate(
+            ParkingSessionStatus.ACTIVE, licensePlate))
+        .thenReturn(Optional.of(entity));
 
     final var response = parkingSessionGateway.findActiveSessionByLicensePlate(licensePlate);
 
@@ -225,20 +237,25 @@ class ParkingSessionGatewayImplTest {
     assertThat(response.get().getStatus()).isEqualTo(ParkingSessionStatus.ACTIVE);
     assertThat(response.get().getVehicle().getLicensePlate()).isEqualTo(licensePlate);
 
-    verify(parkingSessionRepository).findParkingSessionByStatusAndVehicle_LicensePlate(ParkingSessionStatus.ACTIVE, licensePlate);
+    verify(parkingSessionRepository)
+        .findParkingSessionByStatusAndVehicle_LicensePlate(
+            ParkingSessionStatus.ACTIVE, licensePlate);
   }
 
   @Test
   void shouldReturnEmptyWhenNoActiveSessionExistsForLicensePlate() {
     final var licensePlate = "AAA0000";
 
-    when(parkingSessionRepository.findParkingSessionByStatusAndVehicle_LicensePlate(ParkingSessionStatus.ACTIVE, licensePlate))
-            .thenReturn(Optional.empty());
+    when(parkingSessionRepository.findParkingSessionByStatusAndVehicle_LicensePlate(
+            ParkingSessionStatus.ACTIVE, licensePlate))
+        .thenReturn(Optional.empty());
 
     final var response = parkingSessionGateway.findActiveSessionByLicensePlate(licensePlate);
 
     assertThat(response).isEmpty();
 
-    verify(parkingSessionRepository).findParkingSessionByStatusAndVehicle_LicensePlate(ParkingSessionStatus.ACTIVE, licensePlate);
+    verify(parkingSessionRepository)
+        .findParkingSessionByStatusAndVehicle_LicensePlate(
+            ParkingSessionStatus.ACTIVE, licensePlate);
   }
 }

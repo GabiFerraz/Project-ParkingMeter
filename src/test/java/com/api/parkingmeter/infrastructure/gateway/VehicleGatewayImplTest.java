@@ -24,7 +24,7 @@ class VehicleGatewayImplTest {
   void shouldSaveSuccessfully() {
     final var entity = vehicleEntity();
     final ArgumentCaptor<VehicleEntity> vehicleCaptor =
-            ArgumentCaptor.forClass(VehicleEntity.class);
+        ArgumentCaptor.forClass(VehicleEntity.class);
     final var domain = vehicleDomain();
 
     when(vehicleRepository.save(vehicleCaptor.capture())).thenReturn(entity);
@@ -51,36 +51,27 @@ class VehicleGatewayImplTest {
 
     assertThat(response).isPresent();
     assertThat(response)
-            .hasValueSatisfying(
-                    vehicle -> {
-                      assertThat(vehicle.getId()).isEqualTo(entity.getId());
-                      assertThat(vehicle.getLicensePlate()).isEqualTo(entity.getLicensePlate());
-                      assertThat(vehicle.getOwnerName()).isEqualTo(entity.getOwnerName());
-                      assertThat(vehicle.getParkingSessions()).isEqualTo(entity.getParkingSessions());
-                    });
+        .hasValueSatisfying(
+            vehicle -> {
+              assertThat(vehicle.getId()).isEqualTo(entity.getId());
+              assertThat(vehicle.getLicensePlate()).isEqualTo(entity.getLicensePlate());
+              assertThat(vehicle.getOwnerName()).isEqualTo(entity.getOwnerName());
+              assertThat(vehicle.getParkingSessions()).isEqualTo(entity.getParkingSessions());
+            });
 
     verify(vehicleRepository).findByLicensePlate(licensePlate);
   }
 
   @Test
   void shouldUpdateVehicleSuccessfully() {
-    final var existingVehicleEntity = VehicleEntity.builder()
-            .id(1)
-            .licensePlate("AAA0000")
-            .ownerName("Gabi")
-            .build();
+    final var existingVehicleEntity =
+        VehicleEntity.builder().id(1).licensePlate("AAA0000").ownerName("Gabi").build();
 
-    final var updatedVehicleEntity = VehicleEntity.builder()
-            .id(1)
-            .licensePlate("BBB1111")
-            .ownerName("Bruna")
-            .build();
+    final var updatedVehicleEntity =
+        VehicleEntity.builder().id(1).licensePlate("BBB1111").ownerName("Bruna").build();
 
-    final var updatedDomainVehicle = Vehicle.builder()
-            .id(1)
-            .licensePlate("BBB1111")
-            .ownerName("Bruna")
-            .build();
+    final var updatedDomainVehicle =
+        Vehicle.builder().id(1).licensePlate("BBB1111").ownerName("Bruna").build();
 
     when(vehicleRepository.findById(1)).thenReturn(Optional.of(existingVehicleEntity));
     when(vehicleRepository.save(any(VehicleEntity.class))).thenReturn(updatedVehicleEntity);
@@ -96,20 +87,16 @@ class VehicleGatewayImplTest {
 
   @Test
   void shouldThrowExceptionWhenUpdatingNonExistentVehicle() {
-    final var nonExistentVehicle = Vehicle.builder()
-            .id(99)
-            .licensePlate("ZZZ9999")
-            .ownerName("Juninho")
-            .build();
+    final var nonExistentVehicle =
+        Vehicle.builder().id(99).licensePlate("ZZZ9999").ownerName("Juninho").build();
 
     when(vehicleRepository.findById(99)).thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> vehicleGateway.update(nonExistentVehicle))
-            .isInstanceOf(VehicleNotFoundException.class)
-            .hasMessage("Vehicle with license plate=[ZZZ9999] not found.");
+        .isInstanceOf(VehicleNotFoundException.class)
+        .hasMessage("Vehicle with license plate=[ZZZ9999] not found.");
 
     verify(vehicleRepository).findById(99);
     verify(vehicleRepository, never()).save(any());
   }
-
 }
